@@ -57,8 +57,17 @@
                 <span>{{ site_branding }}</span>
             </div>
             <div class="controls">
-                <button id="find-btn" class="btn btn-secondary" title="Find & Replace (Ctrl+F)"><i
-                        class="fa-solid fa-magnifying-glass"></i> Find</button>
+                <button id="history-btn" class="btn btn-secondary" title="Code History (Ctrl+H)">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </button>
+                <input type="file" id="file-upload" accept=".txt,.py,.cpp,.c,.pas,.java,.js,.go,.rs"
+                    style="display: none;">
+                <button id="upload-btn" class="btn btn-secondary" title="Upload File (Ctrl+O)">
+                    <i class="fa-solid fa-upload"></i>
+                </button>
+                <button id="download-btn" class="btn btn-secondary" title="Download Code (Ctrl+S)">
+                    <i class="fa-solid fa-download"></i>
+                </button>
                 <select id="language-select" title="Select Language">
                     {% for lang in available_languages %}
                     <option value="{{ lang.value }}">{{ lang.display }}</option>
@@ -66,8 +75,8 @@
                 </select>
                 <button id="run-btn" class="btn btn-primary" title="Run Code (Ctrl+Enter)"><i
                         class="fa-solid fa-play"></i> Run</button>
-                <button id="share-btn" class="btn btn-secondary" title="Share Code"><i
-                        class="fa-solid fa-share-nodes"></i> Share</button>
+                <button id="settings-btn" class="btn btn-secondary" title="Settings (Ctrl+,)"><i
+                        class="fa-solid fa-gear"></i></button>
             </div>
         </header>
 
@@ -104,6 +113,75 @@
                 </div>
             </section>
         </main>
+
+        <aside id="history-sidebar" class="history-sidebar">
+            <div class="history-header">
+                <h3><i class="fa-solid fa-clock-rotate-left"></i> Code History</h3>
+                <button id="close-history" class="btn-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="history-list" id="history-list">
+                <p class="history-empty">No history yet. Your code will be saved automatically.</p>
+            </div>
+        </aside>
+
+        <aside id="settings-panel" class="settings-panel">
+            <div class="settings-header">
+                <h2><i class="fa-solid fa-gear"></i> Settings</h2>
+                <button id="close-settings" class="btn-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h3>Editor</h3>
+                    <div class="setting-item">
+                        <label for="font-size">Font Size</label>
+                        <select id="font-size">
+                            <option value="12">12px</option>
+                            <option value="14" selected>14px</option>
+                            <option value="16">16px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="tab-size">Tab Size</label>
+                        <select id="tab-size">
+                            <option value="2">2 spaces</option>
+                            <option value="4" selected>4 spaces</option>
+                            <option value="8">8 spaces</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="minimap-toggle">Show Minimap</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="minimap-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="line-numbers-toggle">Show Line Numbers</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="line-numbers-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Keyboard Shortcuts</h3>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+                        <div style="margin-bottom: 8px;"><kbd>Ctrl+Enter</kbd> Run Code</div>
+                        <div style="margin-bottom: 8px;"><kbd>Ctrl+S</kbd> Download Code</div>
+                        <div style="margin-bottom: 8px;"><kbd>Ctrl+O</kbd> Upload File</div>
+                        <div style="margin-bottom: 8px;"><kbd>Ctrl+H</kbd> Code History</div>
+                        <div style="margin-bottom: 8px;"><kbd>Ctrl+F</kbd> Find & Replace</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </div>
 
 
