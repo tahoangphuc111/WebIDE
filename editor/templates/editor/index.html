@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codeon IDE</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'editor/logo.svg' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{% static 'editor/style.css' %}">
+    <style>
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1e1e1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: #ccc;
+            font-family: 'Inter', sans-serif;
+            transition: opacity 0.5s;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-overlay">
+        <div><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br>Loading IDE...</div>
+    </div>
+
+    {% csrf_token %}
+
+
+    <script>
+        window.initialData = {
+            code: `{{ initial_code|escapejs }}`,
+            language: `{{ initial_language|default:"python"|escapejs }}`,
+            snippets: JSON.parse('{{ initial_snippets|escapejs }}')
+        };
+    </script>
+
+    <div class="app-container">
+
+        <header>
+            <div class="logo">
+                <img src="{% static 'editor/logo.svg' %}" alt="Logo" style="width: 24px; height: 24px;">
+                <span>{{ site_branding }}</span>
+            </div>
+            <div class="controls">
+                <button id="find-btn" class="btn btn-secondary" title="Find & Replace (Ctrl+F)"><i
+                        class="fa-solid fa-magnifying-glass"></i> Find</button>
+                <select id="language-select" title="Select Language">
+                    {% for lang in available_languages %}
+                    <option value="{{ lang.value }}">{{ lang.display }}</option>
+                    {% endfor %}
+                </select>
+                <button id="run-btn" class="btn btn-primary" title="Run Code (Ctrl+Enter)"><i
+                        class="fa-solid fa-play"></i> Run</button>
+                <button id="share-btn" class="btn btn-secondary" title="Share Code"><i
+                        class="fa-solid fa-share-nodes"></i> Share</button>
+            </div>
+        </header>
+
+
+        <main>
+
+            <section class="editor-panel">
+                <div class="panel-header">
+                    <span><i class="fa-solid fa-file-code"></i> Code</span>
+                </div>
+                <div id="monaco-editor-container"></div>
+            </section>
+
+
+            <section class="io-panel">
+                <div class="io-section input-section">
+                    <div class="panel-header">
+                        <span><i class="fa-solid fa-keyboard"></i> Input</span>
+                    </div>
+                    <textarea id="input-area" placeholder="Enter input for your program here..."></textarea>
+                </div>
+                <div class="io-section output-section">
+                    <div class="panel-header">
+                        <span><i class="fa-solid fa-terminal"></i> Output</span>
+                        <span id="stats-display"
+                            style="float: right; font-size: 0.85em; color: var(--text-secondary); display: none;">
+                            <span class="stat-item"><i class="fa-regular fa-clock"></i> <span
+                                    id="run-time">0s</span></span>
+                            <span class="stat-item"><i class="fa-solid fa-memory"></i> <span
+                                    id="run-memory">0KB</span></span>
+                        </span>
+                    </div>
+                    <pre id="output-area"></pre>
+                </div>
+            </section>
+        </main>
+    </div>
+
+
+    <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } };</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/editor/editor.main.nls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/editor/editor.main.js"></script>
+
+
+
+    <script src="{% static 'editor/script.js' %}"></script>
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const overlay = document.getElementById('loading-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 500);
+            }, 500);
+        });
+    </script>
+
+
+    <footer>
+        <p>
+            Made with <i class="fa-solid fa-heart"></i> by {{ admin_name }}
+            <span class="separator">•</span>
+            <a href="mailto:{{ admin_email }}">Contact</a>
+        </p>
+    </footer>
+</body>
+
+</html>
